@@ -21,14 +21,13 @@ repositories {
 
 dependencies {
     compileOnly("org.jetbrains:annotations:24.0.1")
-    compileOnly("org.spigotmc:spigot-api:1.20-R0.1-SNAPSHOT")
-    compileOnly("com.comphenix.protocol:ProtocolLib:5.1.0")
-    implementation("com.crypticlib:CrypticLib:0.16.6")
+    compileOnly("org.spigotmc:spigot-api:1.20.6-R0.1-SNAPSHOT")
+    implementation("com.crypticlib:common:0.18.8")
 }
 
-group = "com.example"
+group = "pers.yufiria"
 version = "1.0.0"
-var mainClass = "${rootProject.group}.${rootProject.name.lowercase()}.Example"
+var mainClass = "pers.yufiria.damagedisplay.DamageDisplay"
 var pluginVersion: String = version.toString() + "-" + SimpleDateFormat("yyyyMMdd").format(System.currentTimeMillis())
 java.sourceCompatibility = JavaVersion.VERSION_1_8
 java.targetCompatibility = JavaVersion.VERSION_1_8
@@ -50,6 +49,7 @@ tasks {
         }
     }
     compileJava {
+        dependsOn(clean)
         options.encoding = "UTF-8"
     }
     shadowJar {

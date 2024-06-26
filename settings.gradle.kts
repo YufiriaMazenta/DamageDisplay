@@ -1,1 +1,1 @@
-rootProject.name = "CrypticLibExample"
+rootProject.name = "DamageDisplay"

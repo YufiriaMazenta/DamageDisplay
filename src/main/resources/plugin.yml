@@ -1,7 +1,7 @@
 name: '${name}'
 version: '${version}'
 main: '${main}'
-api-version: 1.13
+api-version: 1.20
 load: POSTWORLD
 authors: [ YufiriaMazenta ]
 folia-supported: true
