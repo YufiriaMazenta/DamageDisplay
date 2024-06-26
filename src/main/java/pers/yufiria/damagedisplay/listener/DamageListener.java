@@ -6,13 +6,11 @@ import crypticlib.listener.BukkitListener;
 import org.bukkit.Color;
 import org.bukkit.Location;
 import org.bukkit.World;
-import org.bukkit.entity.Display;
-import org.bukkit.entity.LivingEntity;
-import org.bukkit.entity.Player;
-import org.bukkit.entity.TextDisplay;
+import org.bukkit.entity.*;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
+import org.bukkit.projectiles.ProjectileSource;
 import pers.yufiria.damagedisplay.DamageDisplay;
 import pers.yufiria.damagedisplay.config.PluginConfig;
 
@@ -31,16 +29,13 @@ public class DamageListener implements Listener {
 
     @EventHandler(ignoreCancelled = true)
     public void onEntityDamageByEntity(EntityDamageByEntityEvent event) {
-        if (!(event.getDamager() instanceof Player)) {
-            return;
-        }
         if (!(event.getEntity() instanceof LivingEntity))
             return;
-        Player player = (Player) event.getDamager();
+
         double finalDamage = event.getFinalDamage();
         String str = PluginConfig.damageFormat.value();
         str = String.format(str, finalDamage);
-        str = TextProcessor.color(TextProcessor.placeholder(player, str));
+        str = TextProcessor.color(str);
 
         LivingEntity entity = (LivingEntity) event.getEntity();
         Location location = new Location(entity.getWorld(), entity.getEyeLocation().getX(), entity.getEyeLocation().getY(), entity.getEyeLocation().getZ());
