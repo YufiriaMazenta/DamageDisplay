@@ -1,8 +1,13 @@
 package pers.yufiria.damagedisplay.listener;
 
+import com.comphenix.protocol.PacketType;
+import com.comphenix.protocol.ProtocolLibrary;
+import com.comphenix.protocol.ProtocolManager;
+import com.comphenix.protocol.events.PacketContainer;
 import crypticlib.CrypticLib;
 import crypticlib.chat.TextProcessor;
 import crypticlib.listener.BukkitListener;
+import org.bukkit.Bukkit;
 import org.bukkit.Color;
 import org.bukkit.Location;
 import org.bukkit.World;
@@ -31,12 +36,12 @@ public class DamageListener implements Listener {
 
     @EventHandler(ignoreCancelled = true)
     public void onEntityDamageByEntity(EntityDamageByEntityEvent event) {
-        if (!(event.getDamageSource().getCausingEntity() instanceof LivingEntity))
+        if (!(event.getDamageSource().getCausingEntity() instanceof Player player))
             return;
         if (!(event.getEntity() instanceof LivingEntity entity))
             return;
 
-        Location location = entity.getEyeLocation();
+        Location location;
         LocationType locationType = LocationType.valueOf(PluginConfig.locationType.value().toUpperCase().replace("-", "_"));
         switch (locationType) {
             case EYE_LOCATION -> {
@@ -60,10 +65,10 @@ public class DamageListener implements Listener {
         } else {
             critical = false;
         }
-        summonDamageDisplay(location, event.getFinalDamage(), critical);
+        summonDamageDisplay(player, location, event.getFinalDamage(), critical);
     }
 
-    public void summonDamageDisplay(Location location, double damage, boolean critical) {
+    public void summonDamageDisplay(Player player, Location location, double damage, boolean critical) {
         World world = location.getWorld();
         if (world == null)
             return;
@@ -74,7 +79,7 @@ public class DamageListener implements Listener {
             damageStr = PluginConfig.damageFormat.value();
         }
         damageStr = String.format(damageStr, damage);
-        damageStr = TextProcessor.color(damageStr);
+        damageStr = TextProcessor.color(TextProcessor.placeholder(player, damageStr));
         TextDisplay textDisplay = world.spawn(location, TextDisplay.class);
         textDisplay.setText(damageStr);
         textDisplay.setGravity(false);
