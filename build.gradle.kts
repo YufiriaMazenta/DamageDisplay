@@ -28,7 +28,7 @@ dependencies {
 }
 
 group = "pers.yufiria"
-version = "1.0.2"
+version = "1.0.3"
 var mainClass = "pers.yufiria.damagedisplay.DamageDisplay"
 var pluginVersion: String = version.toString() + "-" + SimpleDateFormat("yyyyMMdd").format(System.currentTimeMillis())
 java.sourceCompatibility = JavaVersion.VERSION_17

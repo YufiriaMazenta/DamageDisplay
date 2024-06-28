@@ -1,20 +1,18 @@
 package pers.yufiria.damagedisplay.listener;
 
-import com.comphenix.protocol.PacketType;
-import com.comphenix.protocol.ProtocolLibrary;
-import com.comphenix.protocol.ProtocolManager;
-import com.comphenix.protocol.events.PacketContainer;
 import crypticlib.CrypticLib;
 import crypticlib.chat.TextProcessor;
 import crypticlib.listener.BukkitListener;
-import org.bukkit.Bukkit;
 import org.bukkit.Color;
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.World;
+import org.bukkit.block.Block;
 import org.bukkit.entity.*;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
+import org.bukkit.potion.PotionEffectType;
 import org.bukkit.util.Transformation;
 import org.joml.AxisAngle4f;
 import org.joml.Vector3f;
@@ -63,9 +61,43 @@ public class DamageListener implements Listener {
         if (CrypticLib.platform().isPaper()) {
             critical = event.isCritical();
         } else {
-            critical = false;
+            if (event.getDamager() instanceof AbstractArrow arrow) {
+                critical = arrow.isCritical();
+            } else {
+                critical = isCritical(player);
+            }
         }
         summonDamageDisplay(player, location, event.getFinalDamage(), critical);
+    }
+
+    private boolean isCritical(Player player) {
+        if (player.getFallDistance() <= 0.0f)
+            return false;
+        if (player.hasPotionEffect(PotionEffectType.SLOW_FALLING))
+            return false;
+        if (player.hasPotionEffect(PotionEffectType.LEVITATION))
+            return false;
+        if (player.isOnGround())
+            return false;
+        Block block = player.getLocation().getBlock();
+        if (block.isLiquid())
+            return false;
+        Material type = block.getType();
+        if (type.equals(Material.LADDER))
+            return false;
+        if (type.equals(Material.VINE))
+            return false;
+        if (type.equals(Material.COBWEB))
+            return false;
+        if (player.isInWater())
+            return false;
+        if (player.getVehicle() != null)
+            return false;
+        if (player.hasPotionEffect(PotionEffectType.BLINDNESS))
+            return false;
+        if (player.isSprinting())
+            return false;
+        return !(player.getAttackCooldown() < 0.9);
     }
 
     public void summonDamageDisplay(Player player, Location location, double damage, boolean critical) {
